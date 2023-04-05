@@ -10,8 +10,12 @@ async function createTablesAndData() {
 
     // Drop the users table if it exists
     await client.query(`
-        DROP TABLE IF EXISTS USERS;
-      `);
+    DROP TABLE IF EXISTS DOCUMENT_SEARCH CASCADE;
+    DROP TABLE IF EXISTS DOCUMENT CASCADE;
+    DROP TABLE IF EXISTS VIDEO CASCADE;
+    DROP TABLE IF EXISTS CONTENT CASCADE;
+    DROP TABLE IF EXISTS USERS CASCADE;
+    `);
     // Create the users table
     await client.query(`
         CREATE TABLE USERS (
@@ -22,6 +26,40 @@ async function createTablesAndData() {
           date_registered TIMESTAMP NOT NULL DEFAULT NOW()
         )
       `);
+
+    await client.query(`CREATE TYPE CONTENT_TYPE AS ENUM('document', 'video')`);
+
+    await client.query(`
+      CREATE TABLE CONTENT (
+        content_id SERIAL PRIMARY KEY,
+        content_type CONTENT_TYPE NOT NULL
+        )
+        `);
+
+    await client.query(`
+    CREATE TABLE VIDEO (
+      video_id SERIAL PRIMARY KEY,
+      title VARCHAR(256) NOT NULL,
+      description VARCHAR(256),
+      FOREIGN KEY (video_id) REFERENCES CONTENT (content_id)
+    )
+    `);
+
+    await client.query(`
+    CREATE TABLE DOCUMENT (
+      document_id SERIAL PRIMARY KEY,
+      title VARCHAR(256) NOT NULL,
+      author VARCHAR(256),
+      FOREIGN KEY (document_id) REFERENCES CONTENT (content_id))`);
+
+    await client.query(
+      `CREATE TABLE DOCUMENT_SEARCH (
+        uid INTEGER NOT NULL, 
+        document_id INTEGER NOT NULL, 
+        FOREIGN KEY (uid) REFERENCES USERS (uid), 
+        FOREIGN KEY (document_id) REFERENCES DOCUMENT (document_id))`,
+    );
+
     await client.query('COMMIT');
     console.log('Tables and data created successfully!');
   } catch (err) {
