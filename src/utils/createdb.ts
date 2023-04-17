@@ -12,7 +12,9 @@ async function createTablesAndData() {
     await client.query(`
     DROP TABLE IF EXISTS DOCUMENT_SEARCH CASCADE;
     DROP TABLE IF EXISTS DOCUMENT CASCADE;
+    DROP TABLE IF EXISTS AUTHOR CASCADE;
     DROP TABLE IF EXISTS VIDEO CASCADE;
+    DROP TYPE IF EXISTS CONTENT_TYPE CASCADE;
     DROP TABLE IF EXISTS CONTENT CASCADE;
     DROP TABLE IF EXISTS USERS CASCADE;
     `);
@@ -45,12 +47,28 @@ async function createTablesAndData() {
     )
     `);
 
+    // Create tables
     await client.query(`
-    CREATE TABLE DOCUMENT (
-      document_id SERIAL PRIMARY KEY,
-      title VARCHAR(256) NOT NULL,
-      author VARCHAR(256),
-      FOREIGN KEY (document_id) REFERENCES CONTENT (content_id))`);
+        CREATE TABLE AUTHOR (
+          author_id SERIAL PRIMARY KEY,
+          name VARCHAR(256) NOT NULL
+        )`);
+
+    await client.query(`
+        CREATE TABLE DOCUMENT (
+          document_id SERIAL PRIMARY KEY,
+          title VARCHAR(256) NOT NULL,
+          year INTEGER NOT NULL,
+        )`);
+
+    await client.query(`
+        CREATE TABLE DOCUMENT_AUTHOR (
+          document_id INTEGER NOT NULL,
+          author_id INTEGER NOT NULL,
+          PRIMARY KEY (document_id, author_id),
+          FOREIGN KEY (document_id) REFERENCES DOCUMENT (document_id),
+          FOREIGN KEY (author_id) REFERENCES AUTHOR (author_id)
+        )`);
 
     await client.query(
       `CREATE TABLE DOCUMENT_SEARCH (
