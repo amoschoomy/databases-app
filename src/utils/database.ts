@@ -1,7 +1,7 @@
-import { Pool } from 'pg';
+import { Pool, PoolClient } from 'pg';
 import config from '../dbconfig';
 
-const pool = new Pool({
+const db = new Pool({
   host: config.database.host,
   port: config.database.port,
   user: config.database.user,
@@ -9,4 +9,14 @@ const pool = new Pool({
   database: config.database.database
 });
 
-export default pool;
+export function getClient(): Promise<PoolClient> {
+  return new Promise((resolve, reject) => {
+    db.connect((err, client) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(client);
+      }
+    });
+  });
+}

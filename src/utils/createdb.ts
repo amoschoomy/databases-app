@@ -1,10 +1,10 @@
-import pool from './database';
+import { getClient } from './database';
 
 // IMPORTANT: This script will drop the users table if it exists and create it again
 // So do not run this script if in production/ you have data to preserve
-async function createTablesAndData() {
-  const client = await pool.connect();
 
+async function createTablesAndData() {
+  const client = await getClient();
   try {
     await client.query('BEGIN');
 
@@ -12,8 +12,10 @@ async function createTablesAndData() {
     await client.query(`
     DROP TABLE IF EXISTS DOCUMENT_SEARCH CASCADE;
     DROP TABLE IF EXISTS DOCUMENT CASCADE;
+    DROP TABLE IF EXISTS DOCUMENT_AUTHOR CASCADE;
     DROP TABLE IF EXISTS AUTHOR CASCADE;
     DROP TABLE IF EXISTS VIDEO CASCADE;
+    DROP TABLE IF EXISTS SUMMARY CASCADE;
     DROP TYPE IF EXISTS CONTENT_TYPE CASCADE;
     DROP TABLE IF EXISTS CONTENT CASCADE;
     DROP TABLE IF EXISTS USERS CASCADE;
@@ -59,7 +61,14 @@ async function createTablesAndData() {
           document_id SERIAL PRIMARY KEY,
           title VARCHAR(256) NOT NULL,
           year INTEGER NOT NULL,
+          FOREIGN KEY (document_id) REFERENCES CONTENT (content_id)
         )`);
+
+    await client.query(`
+        CREATE TABLE SUMMARY (
+          summary_id SERIAL PRIMARY KEY,
+          summary VARCHAR(4056) NOT NULL,
+          FOREIGN KEY (summary_id) REFERENCES CONTENT (content_id) )`);
 
     await client.query(`
         CREATE TABLE DOCUMENT_AUTHOR (
@@ -85,7 +94,6 @@ async function createTablesAndData() {
     console.error('Error creating tables and data:', err);
   } finally {
     client.release();
-    await pool.end();
   }
 }
 
