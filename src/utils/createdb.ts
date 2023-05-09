@@ -10,6 +10,7 @@ async function createTablesAndData() {
 
     // Drop the users table if it exists
     await client.query(`
+    DROP TABLE IF EXISTS USER_CONTENT CASCADE;
     DROP TABLE IF EXISTS DOCUMENT_SEARCH CASCADE;
     DROP TABLE IF EXISTS DOCUMENT CASCADE;
     DROP TABLE IF EXISTS DOCUMENT_AUTHOR CASCADE;
@@ -62,14 +63,14 @@ async function createTablesAndData() {
           pdf_url VARCHAR(256) NOT NULL,
           title VARCHAR(256) NOT NULL,
           year INTEGER NOT NULL,
-          FOREIGN KEY (document_id) REFERENCES CONTENT (content_id)
+          FOREIGN KEY (document_id) REFERENCES CONTENT (content_id) ON DELETE CASCADE
         )`);
 
     await client.query(`
         CREATE TABLE SUMMARY (
           summary_id SERIAL PRIMARY KEY,
           summary VARCHAR(4056) NOT NULL,
-          FOREIGN KEY (summary_id) REFERENCES CONTENT (content_id) )`);
+          FOREIGN KEY (summary_id) REFERENCES CONTENT (content_id) ON DELETE CASCADE )`);
 
     await client.query(`
         CREATE TABLE DOCUMENT_AUTHOR (
@@ -77,16 +78,28 @@ async function createTablesAndData() {
           author_id INTEGER NOT NULL,
           PRIMARY KEY (document_id, author_id),
           FOREIGN KEY (document_id) REFERENCES DOCUMENT (document_id),
-          FOREIGN KEY (author_id) REFERENCES AUTHOR (scholar_id)
+          FOREIGN KEY (author_id) REFERENCES AUTHOR (scholar_id) ON DELETE CASCADE
         )`);
 
-    await client.query(
-      `CREATE TABLE DOCUMENT_SEARCH (
-        uid INTEGER NOT NULL, 
-        document_id INTEGER NOT NULL, 
-        FOREIGN KEY (uid) REFERENCES USERS (uid), 
-        FOREIGN KEY (document_id) REFERENCES DOCUMENT (document_id))`,
-    );
+    await client.query(`
+        CREATE TABLE DOCUMENT_SEARCH (
+          id SERIAL PRIMARY KEY,
+          uid INTEGER NOT NULL,
+          document_id INTEGER NOT NULL,
+          FOREIGN KEY (uid) REFERENCES USERS (uid),
+          FOREIGN KEY (document_id) REFERENCES DOCUMENT (document_id) ON DELETE CASCADE
+        )
+      `);
+
+    await client.query(`
+    CREATE TABLE USER_CONTENT (
+      uid INTEGER NOT NULL,
+      content_id INTEGER NOT NULL,
+      PRIMARY KEY (uid, content_id),
+      FOREIGN KEY (uid) REFERENCES USERS (uid),
+      FOREIGN KEY (content_id) REFERENCES CONTENT (content_id)
+  )
+`);
 
     await client.query('COMMIT');
     console.log('Tables and data created successfully!');
