@@ -52,13 +52,14 @@ async function createTablesAndData() {
     // Create tables
     await client.query(`
         CREATE TABLE AUTHOR (
-          author_id SERIAL PRIMARY KEY,
+          scholar_id SERIAL PRIMARY KEY,
           name VARCHAR(256) NOT NULL
         )`);
 
     await client.query(`
         CREATE TABLE DOCUMENT (
           document_id SERIAL PRIMARY KEY,
+          pdf_url VARCHAR(256) NOT NULL,
           title VARCHAR(256) NOT NULL,
           year INTEGER NOT NULL,
           FOREIGN KEY (document_id) REFERENCES CONTENT (content_id)
@@ -76,7 +77,7 @@ async function createTablesAndData() {
           author_id INTEGER NOT NULL,
           PRIMARY KEY (document_id, author_id),
           FOREIGN KEY (document_id) REFERENCES DOCUMENT (document_id),
-          FOREIGN KEY (author_id) REFERENCES AUTHOR (author_id)
+          FOREIGN KEY (author_id) REFERENCES AUTHOR (scholar_id)
         )`);
 
     await client.query(

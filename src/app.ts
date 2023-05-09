@@ -1,12 +1,26 @@
 import express from 'express';
+import userRouter from './routes/user.routes';
+import summaryRouter from './routes/summary.routes';
+const fileUpload = require('express-fileupload');
+import { getClient } from './utils/database';
+import { PoolClient } from 'pg';
 
-const app = express();
-const port = process.env.PORT || 3000;
+export let client: PoolClient;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+async function startServer() {
+  client = await getClient();
+  const app = express();
+  app.use(fileUpload());
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+  const port = process.env.PORT || 3000;
+
+  app.use(express.json());
+  app.use(userRouter);
+  app.use(summaryRouter);
+  
+  app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+  });
+}
+
+startServer();
