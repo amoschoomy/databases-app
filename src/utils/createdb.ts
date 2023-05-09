@@ -46,7 +46,7 @@ async function createTablesAndData() {
       video_id SERIAL PRIMARY KEY,
       title VARCHAR(256) NOT NULL,
       description VARCHAR(256),
-      FOREIGN KEY (video_id) REFERENCES CONTENT (content_id)
+      FOREIGN KEY (video_id) REFERENCES CONTENT (content_id) ON DELETE CASCADE
     )
     `);
 
