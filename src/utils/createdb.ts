@@ -28,6 +28,7 @@ async function createTablesAndData() {
           first_name VARCHAR(256) NOT NULL,
           last_name VARCHAR(256),
           email VARCHAR(50) NOT NULL UNIQUE,
+          oauth_id VARCHAR(256) NOT NULL UNIQUE,
           date_registered TIMESTAMP NOT NULL DEFAULT NOW()
         )
       `);
