@@ -76,34 +76,56 @@ export const summariseDocument = async (document_id: string) => {
 };
 
 export const summariseVideo = async (
-  uid: string,
-  video_file: File,
+  oauth_id: string,
+  video_file: any,
   video_description: string | undefined,
 ) => {
-  const result = await client.query(
-    'INSERT INTO CONTENT (content_type) VALUES ($1) RETURNING content_id',
-    ['video'],
-  );
-  const video_id = result.rows[0].content_id;
+  try {
+    console.log(video_file)
+    const query = await client.query(
+      'SELECT uid from USERS WHERE oauth_id = $1',
+      [oauth_id],
+    );
 
-  await client.query(
-    'INSERT INTO USER_CONTENT (uid, content_id) VALUES ($1, $2)',
-    [uid, video_id],
-  );
-  await client.query(
-    'INSERT INTO VIDEO (video_id, title, description) VALUES ($1, $2, $3)',
-    [video_id, video_file.name, video_description ?? null],
-  );
+    const uid = query.rows[0].uid;
+    const result = await client.query(
+      'INSERT INTO CONTENT (content_type) VALUES ($1) RETURNING content_id',
+      ['video'],
+    );
+    const video_id = result.rows[0].content_id;
 
-  const summary = (
-    await axios.post('http://localhost:5000/audio-summarise', video_file)
-  ).data;
+    await client.query(
+      'INSERT INTO USER_CONTENT (uid, content_id) VALUES ($1, $2)',
+      [uid, video_id],
+    );
+    await client.query(
+      'INSERT INTO VIDEO (video_id, title, description) VALUES ($1, $2, $3)',
+      [video_id, video_file.originalname, video_description ?? null],
+    );
+    const formData = new FormData();
+    formData.append('file', video_file);
+    // const response = await axios.post(
+    //   'http://127.0.0.1:8000/summarise-audio',
+    //   formData,
+    //   {
+    //     headers: {
+    //       'Content-Length': 10584044,
+    //       'Content-Type': 'multipart/form-data',
+    //       Accept: 'application/json',
+    //     },
+    //   },
+    // );
 
-  await client.query(
-    'INSERT INTO SUMMARY (summary_id, summary) VALUES ($1, $2)',
-    [video_id, summary],
-  );
-  return summary;
+    // const summary = response.data;
+    const summary = 'test summary' + video_id ;
+    await client.query(
+      'INSERT INTO SUMMARY (summary_id, summary) VALUES ($1, $2)',
+      [video_id, summary],
+    );
+    return summary;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const deleteDocument = async (document_id: string) => {

@@ -26,16 +26,19 @@ export class SummaryController {
   static async retrieveVideoSummaryAPI(req: any, res: any) {
     try {
       const uid = req.body.uid;
-      const video_file = req.body.file.files[0]; // handle with express file upload
-      const video_description = req.body.description;
+      const video_file = req.file; // Access the file's Buffer
+      const video_description = req.body.audio_description;
+
       const summary = await summaryAPI.summariseVideo(
         uid,
         video_file,
         video_description,
       );
-      res.status(200).json({ summary});
-    } catch (error: any) {
-      res.status(500).json({ message: error.toString() });
+
+      res.status(200).send(summary);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error });
     }
   }
 
@@ -43,7 +46,7 @@ export class SummaryController {
     try {
       const document_id = req.body.document_id;
       await summaryAPI.deleteDocument(document_id);
-      res.status(200).json({ status: "Deleted successfully" });
+      res.status(200).json({ status: 'Deleted successfully' });
     } catch (error: any) {
       res.status(500).json({ message: error.toString() });
     }
@@ -53,7 +56,7 @@ export class SummaryController {
     try {
       const video_id = req.body.video_id;
       await summaryAPI.deleteVideo(video_id);
-      res.status(200).json({ status: "Deleted successfully" });
+      res.status(200).json({ status: 'Deleted successfully' });
     } catch (error: any) {
       res.status(500).json({ message: error.toString() });
     }

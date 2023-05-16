@@ -1,6 +1,9 @@
 // In your api folder, you can create a file called userRoutes.ts
 import express from 'express';
+import multer from 'multer';
+
 import { SummaryController } from '../controllers/summary.controller';
+const upload = multer({ storage: multer.memoryStorage() });
 
 const summaryRouter = express.Router();
 
@@ -12,7 +15,7 @@ summaryRouter.post(
   '/summarise-document',
   SummaryController.summariseDocumentAPI,
 );
-summaryRouter.post('/video-summary', SummaryController.retrieveVideoSummaryAPI);
+summaryRouter.post('/video-summary',upload.single('file'), SummaryController.retrieveVideoSummaryAPI);
 summaryRouter.post('/delete-document', SummaryController.deleteDocumentAPI);
 summaryRouter.post('/delete-video', SummaryController.deleteVideoAPI);
 summaryRouter.post(
