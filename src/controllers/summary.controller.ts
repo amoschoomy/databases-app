@@ -4,6 +4,7 @@ export class SummaryController {
   static async retrieveDocumentsAPI(req: any, res: any) {
     try {
       const uid = req.body.uid;
+      console.log(uid);
       const keyword = req.body.keyword;
       const documents = await summaryAPI.retrieveDocuments(uid, keyword);
       res.status(200).json(documents);

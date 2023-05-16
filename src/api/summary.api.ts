@@ -1,50 +1,61 @@
 import axios from 'axios';
 import { client } from '../app';
 
-export const retrieveDocuments = async (uid: string, keyword: string) => {
-  const documents = (await axios.post('http://localhost:5000/search', keyword))
-    .data;
-  const transformedDocuments = [];
-  for (const document of documents) {
+export const retrieveDocuments = async (oauth_id: string, keyword: string) => {
+  try {
+    const documents = (
+      await axios.post('http://127.0.0.1:8000/search', { keyword: keyword })
+    ).data;
+    const transformedDocuments = [];
     const result = await client.query(
-      'INSERT INTO CONTENT (content_type) VALUES ($1) RETURNING content_id',
-      ['document'],
+      'SELECT uid from USERS WHERE oauth_id = $1',
+      [oauth_id],
     );
-    const content_id = result.rows[0].content_id;
+    const uid = result.rows[0].uid;
+    for (const document of documents) {
+      console.log(document);
+      const result = await client.query(
+        'INSERT INTO CONTENT (content_type) VALUES ($1) RETURNING content_id',
+        ['document'],
+      );
+      const content_id = result.rows[0].content_id;
 
-    await client.query(
-      'INSERT INTO USER_CONTENT (uid, content_id) VALUES ($1, $2)',
-      [uid, content_id],
-    );
-    await client.query(
-      'INSERT INTO DOCUMENT (document_id, title, year, pdf_url) VALUES ($1, $2, $3, $4)',
-      [content_id, document.title, document.year, document.pdf_url],
-    );
-    await client.query(
-      'INSERT INTO DOCUMENT_SEARCH (uid, document_id) VALUES ($1, $2)',
-      [uid, content_id],
-    );
-
-    for (const author of document.authors) {
       await client.query(
-        'INSERT INTO AUTHOR (scholar_id, name) VALUES ($1, $2)',
-        [author.scholar_id, author.name],
+        'INSERT INTO USER_CONTENT (uid, content_id) VALUES ($1, $2)',
+        [uid, content_id],
       );
       await client.query(
-        'INSERT INTO DOCUMENT_AUTHOR (document_id, author_id) VALUES ($1, $2)',
-        [content_id, author.scholar_id],
+        'INSERT INTO DOCUMENT (document_id, title, year, pdf_url) VALUES ($1, $2, $3, $4)',
+        [content_id, document.title, document.year, document.pdf_url],
       );
+      await client.query(
+        'INSERT INTO DOCUMENT_SEARCH (uid, document_id) VALUES ($1, $2)',
+        [uid, content_id],
+      );
+
+      for (const author of document.authors) {
+        await client.query(
+          'INSERT INTO AUTHOR (scholar_id, name) VALUES ($1, $2) ON CONFLICT (scholar_id) DO NOTHING',
+          [author.scholar_id, author.name],
+        );
+        await client.query(
+          'INSERT INTO DOCUMENT_AUTHOR (document_id, author_id) VALUES ($1, $2)',
+          [content_id, author.scholar_id],
+        );
+      }
+      const authorNames = document.authors.map(
+        (author: { name: any }) => author.name,
+      );
+      transformedDocuments.push({
+        document_id: content_id,
+        title: document.title,
+        authors: authorNames,
+      });
     }
-    const authorNames = document.authors.map(
-      (author: { name: any }) => author.name,
-    );
-    transformedDocuments.push({
-      document_id: content_id,
-      title: document.title,
-      authors: authorNames,
-    });
+    return transformedDocuments;
+  } catch (error) {
+    console.log(error);
   }
-  return transformedDocuments;
 };
 
 export const summariseDocument = async (document_id: string) => {
@@ -121,7 +132,6 @@ export const regenerateSummary = async (content_id: string) => {
 };
 
 export const countTotalSummary = async (uid: string) => {
-
   const result = await client.query(
     `SELECT COUNT(*) FROM USER_CONTENT WHERE uid = $1 AND content_id IN (SELECT summary_id FROM SUMMARY)`,
     [uid],

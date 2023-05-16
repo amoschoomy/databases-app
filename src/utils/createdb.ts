@@ -54,7 +54,7 @@ async function createTablesAndData() {
     // Create tables
     await client.query(`
         CREATE TABLE AUTHOR (
-          scholar_id SERIAL PRIMARY KEY,
+          scholar_id VARCHAR(256) PRIMARY KEY,
           name VARCHAR(256) NOT NULL
         )`);
 
@@ -76,7 +76,7 @@ async function createTablesAndData() {
     await client.query(`
         CREATE TABLE DOCUMENT_AUTHOR (
           document_id INTEGER NOT NULL,
-          author_id INTEGER NOT NULL,
+          author_id VARCHAR(256) NOT NULL,
           PRIMARY KEY (document_id, author_id),
           FOREIGN KEY (document_id) REFERENCES DOCUMENT (document_id),
           FOREIGN KEY (author_id) REFERENCES AUTHOR (scholar_id) ON DELETE CASCADE
