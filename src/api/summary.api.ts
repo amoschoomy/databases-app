@@ -155,9 +155,15 @@ export const regenerateSummary = async (content_id: string) => {
   ]);
 };
 
-export const countTotalSummary = async (uid: string) => {
+export const countTotalSummary = async (oauth_id: string) => {
+  const query = await client.query(
+    'SELECT uid from USERS WHERE oauth_id = $1',
+    [oauth_id],
+  );
+
+  const uid = query.rows[0].uid;
   const result = await client.query(
-    `SELECT COUNT(*) FROM USER_CONTENT WHERE uid = $1 AND content_id IN (SELECT summary_id FROM SUMMARY)`,
+    `SELECT COUNT(*) FROM USER_CONTENT WHERE uid = $1`,
     [uid],
   );
   return result.rows[0].count;

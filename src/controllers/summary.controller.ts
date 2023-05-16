@@ -77,8 +77,9 @@ export class SummaryController {
     try {
       const uid = req.body.uid;
       const totalNo = await summaryAPI.countTotalSummary(uid);
-      res.status(200).json({ totalNo });
+      res.status(200).send( totalNo);
     } catch (error: any) {
+      console.log(error);
       res.status(500).json({ message: error.toString() });
     }
   }
