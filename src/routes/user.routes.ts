@@ -5,5 +5,5 @@ import { UserController } from '../controllers/user.controller';
 const userRouter = express.Router();
 
 userRouter.post('/add-user', UserController.addUserDetailsAPI);
-
+userRouter.post('/get-user-summaries', UserController.getUserSummariesAPI);
 export default userRouter;

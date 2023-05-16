@@ -4,7 +4,7 @@ import { client } from '../app';
 export const retrieveDocuments = async (oauth_id: string, keyword: string) => {
   try {
     const documents = (
-      await axios.post('http://127.0.0.1:8000/search', { keyword: keyword })
+      await axios.post('http://127.0.0.1:8000/search/', { keyword: keyword })
     ).data;
     const transformedDocuments = [];
     const result = await client.query(
@@ -64,11 +64,13 @@ export const summariseDocument = async (document_id: string) => {
       document_id,
     ])
   ).rows[0];
-  const summary = (await axios.post('http://localhost:5000/summarise', pdf_url))
-    .data;
+  // const summary = (await axios.post('http://localhost:5000/summarise', pdf_url))
+  //   .data;
+
+  const summary = 'test docment summary' + document_id;
 
   await client.query(
-    'INSERT INTO SUMMARY (summary_id, summary) VALUES ($1, $2)',
+    'INSERT INTO SUMMARY (summary_id, summary) VALUES ($1, $2) ON CONFLICT (summary_id) DO NOTHING',
     [document_id, summary],
   );
 
@@ -81,7 +83,7 @@ export const summariseVideo = async (
   video_description: string | undefined,
 ) => {
   try {
-    console.log(video_file)
+    console.log(video_file);
     const query = await client.query(
       'SELECT uid from USERS WHERE oauth_id = $1',
       [oauth_id],
@@ -117,7 +119,7 @@ export const summariseVideo = async (
     // );
 
     // const summary = response.data;
-    const summary = 'test summary' + video_id ;
+    const summary = 'test summary' + video_id;
     await client.query(
       'INSERT INTO SUMMARY (summary_id, summary) VALUES ($1, $2)',
       [video_id, summary],

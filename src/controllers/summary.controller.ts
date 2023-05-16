@@ -17,8 +17,9 @@ export class SummaryController {
     try {
       const document_id = req.body.document_id;
       const summary = await summaryAPI.summariseDocument(document_id);
-      res.status(200).json({ summary });
+      res.status(200).send( summary);
     } catch (error: any) {
+      console.log(error);
       res.status(500).json({ message: error.toString() });
     }
   }

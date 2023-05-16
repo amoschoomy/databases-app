@@ -1,4 +1,4 @@
-import { addUserDetails } from '../api/user.api';
+import { addUserDetails,getAllSummaries } from '../api/user.api';
 import { Request, Response } from 'express';
 
 export class UserController {
@@ -11,4 +11,15 @@ export class UserController {
       res.status(500).json({ message: error.toString() });
     }
   }
-}
+  static async getUserSummariesAPI(req: Request, res: Response) {
+    try{
+      const uid = req.body.uid;
+      console.log(uid);
+      const summaries = await getAllSummaries(uid);
+      // console.log(summaries);
+      res.status(200).send(summaries);
+    } catch (error:any) {
+      console.log(error);
+      res.status(500).json({ message: error.toString() });
+    }
+}}
