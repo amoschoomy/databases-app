@@ -194,7 +194,13 @@ export const countTotalVideo = async (uid: string) => {
   return result.rows[0].count;
 };
 
-export const groupDocumentsByYear = async (uid: string) => {
+export const groupDocumentsByYear = async (oauth_id: string) => {
+  const query = await client.query(
+    'SELECT uid from USERS WHERE oauth_id = $1',
+    [oauth_id],
+  );
+
+  const uid = query.rows[0].uid;
   const result = await client.query(
     `
   SELECT d.year, COUNT(*) AS number_of_documents

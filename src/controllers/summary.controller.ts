@@ -110,6 +110,7 @@ export class SummaryController {
       const documents = await summaryAPI.groupDocumentsByYear(uid);
       res.status(200).json({ documents });
     } catch (error: any) {
+      console.log(error);
       res.status(500).json({ message: error.toString() });
     }
   }
