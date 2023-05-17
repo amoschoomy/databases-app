@@ -17,7 +17,7 @@ export class SummaryController {
     try {
       const document_id = req.body.document_id;
       const summary = await summaryAPI.summariseDocument(document_id);
-      res.status(200).send( summary);
+      res.status(200).send(summary);
     } catch (error: any) {
       console.log(error);
       res.status(500).json({ message: error.toString() });
@@ -63,11 +63,12 @@ export class SummaryController {
     }
   }
 
-  static async regenerateDocumentSummaryAPI(req: any, res: any) {
+  static async updateSummaryAPI(req: any, res: any) {
     try {
-      const document_id = req.body.document_id;
-      const summary = await summaryAPI.regenerateSummary(document_id);
-      res.status(200).json({ summary });
+      const content_id = req.body.content_id;
+      const new_summary = req.body.new_summary;
+      await summaryAPI.updateSummary(new_summary, content_id);
+      res.status(200).json({ status: 'Updated successfully' });
     } catch (error: any) {
       res.status(500).json({ message: error.toString() });
     }
@@ -77,7 +78,7 @@ export class SummaryController {
     try {
       const uid = req.body.uid;
       const totalNo = await summaryAPI.countTotalSummary(uid);
-      res.status(200).send( totalNo);
+      res.status(200).send(totalNo);
     } catch (error: any) {
       console.log(error);
       res.status(500).json({ message: error.toString() });

@@ -140,15 +140,7 @@ export const deleteVideo = async (video_id: string) => {
   await client.query('DELETE FROM CONTENT WHERE content_id = $1', [video_id]);
 };
 
-export const regenerateSummary = async (content_id: string) => {
-  // update operation
-  const pdf_url = (
-    await client.query('SELECT pdf_url FROM DOCUMENT WHERE document_id = $1', [
-      content_id,
-    ])
-  ).rows[0];
-  const summary = (await axios.post('http://localhost:5000/summarise', pdf_url))
-    .data;
+export const updateSummary = async (summary: string, content_id: string) => {
   await client.query('UPDATE SUMMARY SET summary = $1 WHERE summary_id = $2', [
     summary,
     content_id,
