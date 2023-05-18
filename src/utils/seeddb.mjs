@@ -20,4 +20,4 @@ async function runSQLFile(filePath) {
 }
 
 await runSQLFile('./insertdata.sql');
-await runSQLFile('./querydemonstration.sql');
+// await runSQLFile('./querydemonstration.sql');
