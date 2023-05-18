@@ -43,25 +43,18 @@ export class SummaryController {
     }
   }
 
-  static async deleteDocumentAPI(req: any, res: any) {
-    try {
-      const document_id = req.body.document_id;
-      await summaryAPI.deleteDocument(document_id);
-      res.status(200).json({ status: 'Deleted successfully' });
-    } catch (error: any) {
-      res.status(500).json({ message: error.toString() });
-    }
-  }
+static async deleteContentAPI (req: any, res: any) {
+  try {
+    const content_id = req.query.content_id;
 
-  static async deleteVideoAPI(req: any, res: any) {
-    try {
-      const video_id = req.body.video_id;
-      await summaryAPI.deleteVideo(video_id);
-      res.status(200).json({ status: 'Deleted successfully' });
-    } catch (error: any) {
-      res.status(500).json({ message: error.toString() });
-    }
+    console.log(content_id);
+    await summaryAPI.deleteContent(content_id);
+    res.status(200).json({ status: 'Deleted successfully' });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({ message: error.toString() });
   }
+}
 
   static async updateSummaryAPI(req: any, res: any) {
     try {

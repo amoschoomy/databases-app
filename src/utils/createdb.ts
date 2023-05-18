@@ -78,7 +78,7 @@ async function createTablesAndData() {
           document_id INTEGER NOT NULL,
           author_id VARCHAR(256) NOT NULL,
           PRIMARY KEY (document_id, author_id),
-          FOREIGN KEY (document_id) REFERENCES DOCUMENT (document_id),
+          FOREIGN KEY (document_id) REFERENCES DOCUMENT (document_id) ON DELETE CASCADE,
           FOREIGN KEY (author_id) REFERENCES AUTHOR (scholar_id) ON DELETE CASCADE
         )`);
 
@@ -98,7 +98,7 @@ async function createTablesAndData() {
       content_id INTEGER NOT NULL,
       PRIMARY KEY (uid, content_id),
       FOREIGN KEY (uid) REFERENCES USERS (uid),
-      FOREIGN KEY (content_id) REFERENCES CONTENT (content_id)
+      FOREIGN KEY (content_id) REFERENCES CONTENT (content_id) ON DELETE CASCADE
   )
 `);
 

@@ -130,15 +130,10 @@ export const summariseVideo = async (
   }
 };
 
-export const deleteDocument = async (document_id: string) => {
-  await client.query('DELETE FROM CONTENT WHERE content_id = $1', [
-    document_id,
-  ]);
-};
 
-export const deleteVideo = async (video_id: string) => {
-  await client.query('DELETE FROM CONTENT WHERE content_id = $1', [video_id]);
-};
+export const deleteContent = async(content_id: string) => {
+  await client.query('DELETE FROM CONTENT WHERE content_id = $1', [content_id]);
+}
 
 export const updateSummary = async (summary: string, content_id: string) => {
   await client.query('UPDATE SUMMARY SET summary = $1 WHERE summary_id = $2', [

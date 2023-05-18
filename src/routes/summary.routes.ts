@@ -16,8 +16,7 @@ summaryRouter.post(
   SummaryController.summariseDocumentAPI,
 );
 summaryRouter.post('/video-summary',upload.single('file'), SummaryController.retrieveVideoSummaryAPI);
-summaryRouter.post('/delete-document', SummaryController.deleteDocumentAPI);
-summaryRouter.post('/delete-video', SummaryController.deleteVideoAPI);
+summaryRouter.delete('/delete-content', SummaryController.deleteContentAPI);
 summaryRouter.post(
   '/update-summary',
   SummaryController.updateSummaryAPI,
