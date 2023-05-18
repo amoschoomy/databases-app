@@ -25,11 +25,7 @@ summaryRouter.post(
   '/count-total-summary',
   SummaryController.countTotalSummaryAPI,
 );
-summaryRouter.post(
-  '/count-total-document',
-  SummaryController.countTotalDocumentAPI,
-);
-summaryRouter.post('/count-total-video', SummaryController.countTotalVideoAPI);
+
 summaryRouter.post(
   '/group-docs-by-year',
   SummaryController.groupDocumentsByYearAPI,

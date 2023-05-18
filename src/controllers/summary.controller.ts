@@ -78,26 +78,6 @@ static async deleteContentAPI (req: any, res: any) {
     }
   }
 
-  static async countTotalVideoAPI(req: any, res: any) {
-    try {
-      const uid = req.body.uid;
-      const totalVideoCount = await summaryAPI.countTotalVideo(uid);
-      res.status(200).json({ totalVideoCount });
-    } catch (error: any) {
-      res.status(500).json({ message: error.toString() });
-    }
-  }
-
-  static async countTotalDocumentAPI(req: any, res: any) {
-    try {
-      const uid = req.body.uid;
-      const total = await summaryAPI.countTotalDocument(uid);
-      res.status(200).json({ total });
-    } catch (error: any) {
-      res.status(500).json({ message: error.toString() });
-    }
-  }
-
   static async groupDocumentsByYearAPI(req: any, res: any) {
     try {
       const uid = req.body.uid;

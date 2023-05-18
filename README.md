@@ -36,7 +36,7 @@ The sql dump file for it is at `src/createdb.sql` while the actual script is at 
 
 Next we need to seed the DB with some data to demonstrate the SQL query. The seed script will insert mock data into the application database. The SQL file used to seed the DB is `src/insertdata.sql`.
 
-`node seeddb.mjs`
+`npm run seed_db`
 
 ## Run the app
 
@@ -46,4 +46,6 @@ Finally run the app.
 
 # NOTE:
 
-The file `querydemonstration.sql` is just a SQL dump of the queries that will be demonstrated in the program. You can use this file to run the queries in your database client, but it is advised to replicate it at the frontend
+The file `querydemonstration.sql` is just a SQL dump of the queries that will be demonstrated in the program. You can use this file to run the queries in your database client, but it is advised to replicate it at the frontend.
+
+The function to retrieve academic articles from an external academic database is not deployed therefore you cannot search for academic articles. Therefore please seed the DB like mentioned above before proceeding with the query demonstration. 

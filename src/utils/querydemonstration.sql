@@ -26,10 +26,7 @@ WHERE ds.uid = (
 GROUP BY d.year;
 
 /* Join Query */
--- get_all_summaries_combined.sql
 
--- Query: Get all summaries for the user based on the provided OAuth ID
--- Replace :oauth_id with the actual OAuth ID value before executing
 SELECT 
   CONTENT.content_id,
   COALESCE(DOCUMENT.title, VIDEO.title) AS title,
@@ -48,4 +45,3 @@ WHERE USER_CONTENT.uid = (
 /* Delete With Cascade Query */
 DELETE FROM CONTENT
 WHERE content_id = 2;
-

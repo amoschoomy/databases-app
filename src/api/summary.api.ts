@@ -5,7 +5,7 @@ export const retrieveDocuments = async (oauth_id: string, keyword: string) => {
   try {
     const documents = (
       await axios.post('http://127.0.0.1:8000/search/', { keyword: keyword })
-    ).data;
+    ).data; // endpoint is not deployed and no codes will be released here
     const transformedDocuments = [];
     const result = await client.query(
       'SELECT uid from USERS WHERE oauth_id = $1',
@@ -59,13 +59,11 @@ export const retrieveDocuments = async (oauth_id: string, keyword: string) => {
 };
 
 export const summariseDocument = async (document_id: string) => {
-  const pdf_url = (
-    await client.query('SELECT pdf_url FROM DOCUMENT WHERE document_id = $1', [
-      document_id,
-    ])
-  ).rows[0];
-  // const summary = (await axios.post('http://localhost:5000/summarise', pdf_url))
-  //   .data;
+  // const pdf_url = (
+  //   await client.query('SELECT pdf_url FROM DOCUMENT WHERE document_id = $1', [
+  //     document_id,
+  //   ])
+  // ).rows[0];
 
   const summary = 'test docment summary' + document_id;
 
@@ -106,19 +104,6 @@ export const summariseVideo = async (
     );
     const formData = new FormData();
     formData.append('file', video_file);
-    // const response = await axios.post(
-    //   'http://127.0.0.1:8000/summarise-audio',
-    //   formData,
-    //   {
-    //     headers: {
-    //       'Content-Length': 10584044,
-    //       'Content-Type': 'multipart/form-data',
-    //       Accept: 'application/json',
-    //     },
-    //   },
-    // );
-
-    // const summary = response.data;
     const summary = 'test summary' + video_id;
     await client.query(
       'INSERT INTO SUMMARY (summary_id, summary) VALUES ($1, $2)',
@@ -151,31 +136,6 @@ export const countTotalSummary = async (oauth_id: string) => {
   const uid = query.rows[0].uid;
   const result = await client.query(
     `SELECT COUNT(*) FROM USER_CONTENT WHERE uid = $1`,
-    [uid],
-  );
-  return result.rows[0].count;
-};
-
-export const countTotalDocument = async (uid: string) => {
-  const result = await client.query(
-    `
-    SELECT COUNT(*)
-    FROM DOCUMENT_SEARCH
-    WHERE uid = $1
-  `,
-    [uid],
-  );
-  return result.rows[0].count;
-};
-
-export const countTotalVideo = async (uid: string) => {
-  const result = await client.query(
-    `
-    SELECT COUNT(*)
-    FROM USER_CONTENT
-    INNER JOIN CONTENT ON USER_CONTENT.content_id = CONTENT.content_id
-    WHERE USER_CONTENT.uid = $1 AND CONTENT.content_type = 'video'
-  `,
     [uid],
   );
   return result.rows[0].count;
