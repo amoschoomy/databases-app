@@ -3,7 +3,7 @@ import { getClient } from './database';
 // IMPORTANT: This script will drop the users table if it exists and create it again
 // So do not run this script if in production/ you have data to preserve
 
-async function createTablesAndData() {
+const createTablesAndData = async () => {
   const client = await getClient();
   try {
     await client.query('BEGIN');
@@ -25,7 +25,7 @@ async function createTablesAndData() {
     await client.query(`
         CREATE TABLE USERS (
           uid SERIAL PRIMARY KEY,
-          first_name VARCHAR(256) NOT NULL,
+          first_name VARCHAR(256),
           last_name VARCHAR(256),
           email VARCHAR(50) NOT NULL UNIQUE,
           oauth_id VARCHAR(256) NOT NULL UNIQUE,
@@ -110,6 +110,6 @@ async function createTablesAndData() {
   } finally {
     client.release();
   }
-}
+};
 
 createTablesAndData();
