@@ -1,10 +1,11 @@
 import fs from 'fs';
 import { getClient } from './database';
 
-async function runSQLFile(filePath) {
+async function runSQLFile(filePath: fs.PathOrFileDescriptor) {
   const client = await getClient();
 
   try {
+    console.log('Executing SQL file:', filePath);
     const sql = fs.readFileSync(filePath, 'utf8');
 
     // Run the SQL commands
@@ -19,5 +20,5 @@ async function runSQLFile(filePath) {
   }
 }
 
-await runSQLFile('./insertdata.sql');
+runSQLFile('src//utils//insertdata.sql');
 // await runSQLFile('./querydemonstration.sql');

@@ -29,8 +29,8 @@ export const retrieveDocuments = async (oauth_id: string, keyword: string) => {
         [content_id, document.title, document.year, document.pdf_url],
       );
       await client.query(
-        'INSERT INTO DOCUMENT_SEARCH (uid, document_id) VALUES ($1, $2)',
-        [uid, content_id],
+        'INSERT INTO DOCUMENT_SEARCH (uid, document_id,keyword) VALUES ($1, $2)',
+        [uid, content_id,keyword],
       );
 
       for (const author of document.authors) {

@@ -4,6 +4,9 @@ INSERT INTO users
 (first_name, last_name, email, oauth_id)
 VALUES(NULL, NULL, 'infs7901@gmail.com', 'auth0|646580b892e83c2d192e933a'); /* Add user. to use this user. password: @infs7901 */
 
+COMMIT;
+
+BEGIN;
 /* Insert into Content table */
 INSERT INTO "content"
 (content_id, "content_type")
@@ -38,8 +41,10 @@ VALUES(10, 'video'::public."content_type");
 INSERT INTO "content"
 (content_id, "content_type")
 VALUES(11, 'video'::public."content_type");
+COMMIT;
 
 /* Insert into user content table */
+BEGIN;
 INSERT INTO user_content
 (uid, content_id)
 VALUES(1, 1);
@@ -73,8 +78,10 @@ VALUES(1, 10);
 INSERT INTO user_content
 (uid, content_id)
 VALUES(1, 11);
+COMMIT;
 
 /* Insert into documents table */
+BEGIN;
 INSERT INTO "document"
 (document_id, pdf_url, title, "year")
 VALUES(1, 'https://arxiv.org/pdf/1711.07128.pdf%EF%BC%89%E5%B7%B2%E6%B7%BB%E5%8A%A0%E8%BF%9B%E6%9D%A5', 'Hello edge: Keyword spotting on microcontrollers', 2017);
@@ -93,29 +100,32 @@ VALUES(5, 'https://arxiv.org/pdf/2006.15222', 'BERTology meets biology: interpre
 INSERT INTO "document"
 (document_id, pdf_url, title, "year")
 VALUES(6, 'https://arxiv.org/pdf/0807.0715', 'Atomic biology, electrostatics, and ionic channels', 2008);
+COMMIT;
 
 /* Insert into document search table */
+BEGIN;
 INSERT INTO document_search
-(id, uid, document_id)
-VALUES(1, 1, 1);
+(id, uid, document_id,keyword)
+VALUES(1, 1, 1,'keyword');
 INSERT INTO document_search
-(id, uid, document_id)
-VALUES(2, 1, 2);
+(id, uid, document_id,keyword)
+VALUES(2, 1, 2,'keyword');
 INSERT INTO document_search
-(id, uid, document_id)
-VALUES(3, 1, 3);
+(id, uid, document_id,keyword)
+VALUES(3, 1, 3,'keyword');
 INSERT INTO document_search
-(id, uid, document_id)
-VALUES(4, 1, 4);
+(id, uid, document_id,keyword)
+VALUES(4, 1, 4,'biology');
 INSERT INTO document_search
-(id, uid, document_id)
-VALUES(5, 1, 5);
+(id, uid, document_id,keyword)
+VALUES(5, 1, 5,'biology');
 INSERT INTO document_search
-(id, uid, document_id)
-VALUES(6, 1, 6);
+(id, uid, document_id,keyword)
+VALUES(6, 1, 6,'biology');
+COMMIT;
 
 /* Insert into Author */
-
+BEGIN;
 INSERT INTO author
 (scholar_id, "name")
 VALUES('7de84zoAAAAJ', 'Howard Y. Chang');
@@ -173,8 +183,10 @@ VALUES('JIJGu30AAAAJ', 'Lav R. Varshney');
 INSERT INTO author
 (scholar_id, "name")
 VALUES('vaSdahkAAAAJ', 'Caiming Xiong');
+COMMIT;
 
 /* Insert into document author */
+BEGIN;
 INSERT INTO document_author
 (document_id, author_id)
 VALUES(1, '7de84zoAAAAJ');
@@ -232,8 +244,9 @@ VALUES(5, 'JIJGu30AAAAJ');
 INSERT INTO document_author
 (document_id, author_id)
 VALUES(5, 'vaSdahkAAAAJ');
-
+COMMIT;
 /* Insert into Video */
+BEGIN;
 INSERT INTO video
 (video_id, title, description)
 VALUES(7, 'test.wav', 'test desc');
@@ -249,8 +262,9 @@ VALUES(10, 'testaudio3.wav', 'ddd');
 INSERT INTO video
 (video_id, title, description)
 VALUES(11, 'testy.wav', 'eee');
-
+COMMIT;
 /* Insert into summary table */
+BEGIN;
 INSERT INTO summary
 (summary_id, summary)
 VALUES(1, 'test docment summary1');

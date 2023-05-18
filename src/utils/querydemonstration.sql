@@ -45,7 +45,7 @@ WHERE USER_CONTENT.uid = (
     WHERE oauth_id = 'auth0|646580b892e83c2d192e933a'
 );
 
-/* Delete Query */
+/* Delete With Cascade Query */
 DELETE FROM CONTENT
 WHERE content_id = 2;
 

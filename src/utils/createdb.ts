@@ -87,6 +87,8 @@ const createTablesAndData = async () => {
           id SERIAL PRIMARY KEY,
           uid INTEGER NOT NULL,
           document_id INTEGER NOT NULL,
+          keyword VARCHAR(256) NOT NULL,
+          timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
           FOREIGN KEY (uid) REFERENCES USERS (uid),
           FOREIGN KEY (document_id) REFERENCES DOCUMENT (document_id) ON DELETE CASCADE
         )
