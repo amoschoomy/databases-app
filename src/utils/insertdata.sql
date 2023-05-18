@@ -1,3 +1,5 @@
+BEGIN;
+
 INSERT INTO users
 (first_name, last_name, email, oauth_id)
 VALUES(NULL, NULL, 'infs7901@gmail.com', 'auth0|646580b892e83c2d192e933a'); /* Add user. to use this user. password: @infs7901 */
@@ -282,3 +284,5 @@ VALUES(10, 'test summary10');
 INSERT INTO summary
 (summary_id, summary)
 VALUES(11, 'test summary11');
+
+COMMIT;
